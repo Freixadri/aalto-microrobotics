@@ -8,17 +8,17 @@ function [step,manipulationTime] = controlLoop(mycontroller,maps,target,toleranc
     % Loop until the object is within tolerance of the target
     while any(distance(curPos,target) > tolerance)           
         % Ask the controller which frequency to play next
-        frequencyId = mycontroller(maps,curPos,target);                                                 
+        frequencyId = mycontroller(maps,curPos,target);
         % Play the frequency       
         plate.play(frequencyId); 
         % Get the positions after playing the frequency
-        nextPos = plate.getPositions();        
+        nextPos = plate.getPositions();
         if (nargin > 5 && ~isempty(recorder))
             % Save/show the data
             recorder(curPos,nextPos,target,frequencyId);
         end
         curPos = nextPos;  
-        step = step + 1;        
+        step = step + 1;
     end
     manipulationTime = toc;              
     

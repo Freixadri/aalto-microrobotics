@@ -13,8 +13,23 @@ function id = controller(maps,position,target)
     %               is pnew = p + [maps(id).deltaX(p) maps(id).deltaY(p)].
     
     % TODO: Implement your controller here.
-    id = randi([1,length(maps)]);    
-    
-    pnew = p + [maps(id).deltaX(p) maps(id).deltaY(p)];
+   
+    stuck=evalin('base','particle_stuck');      %Evaluate if the particle is stucked
+    if stuck==0                                 % Particle not stuck
+        cost=zeros(1,59);                       % Defining cost variable
+        %totalcost=zeros(1,59);
+        for i=1:length(maps)                    % Compute for all possible frequences
+            pnew = position + [maps(i).deltaX(position) maps(i).deltaY(position)] + maps(i).variance(position); % Calculate new position  
+            opp=target(1)-pnew(1);cont=position(2)-pnew(2);                      % Vector lengths to calculate angle
+            %cost(i) = atan2(opp,cont);                                          % Angle between movement vector and target      
+            cost(i)=sqrt((pnew(1)-target(1))^2+(pnew(2)-target(2))^2);         % Distance from new position to target
+            %totalcost(i) = 3*theta+cost;
+        end
+                       
+        [ct,id]=min(cost);                     % Minimize cost function
+        %[tcost,id]=min(totalcost);
+    else                                        % Particle stuck
+         id = randi([1,length(maps)]);          % Execute random frequency to unstuck the particle
+    end
 end
         

@@ -27,9 +27,11 @@ function ret = simulatedPlate(modeInfo,maps,positions,particle_stuck,played_note
             ((particle_stuck == 1) && (noteId ~= played_notes(end)))
             noise = (sqrt(max(maps(noteId).variance(positions),0)) * [1 1]) .* randn(size(positions));
             positions = positions + [maps(noteId).deltaX(positions),maps(noteId).deltaY(positions)] + noise; 
-            particle_stuck = 0; 
+            particle_stuck = 0;
+            assignin('base','particle_stuck',0)
         elseif (particle_stuck == 0) && (get_stuck <= stuck_probability)   
             particle_stuck = 1; 
+            assignin('base','particle_stuck',1)
         end
         
         pause(1e-6); % slow things down just enough matlab has time to plot things      
